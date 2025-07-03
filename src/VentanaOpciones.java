@@ -1,55 +1,88 @@
 import javax.swing.*;
 import java.awt.*;
+import javax.sound.sampled.Clip;
 
 public class VentanaOpciones extends JFrame {
+    private Clip musicaClip;
 
-    public VentanaOpciones() {
+    public VentanaOpciones(Clip musicaClip) {
+        this.musicaClip = musicaClip;
+
         setTitle("Opciones");
-        setSize(400, 500);
+        setSize(500, 550);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout(10, 10));
+        setResizable(false);
+        setIconImage(new ImageIcon(getClass().getResource("/Icon.png")).getImage());
 
-        // 🌟 Icono de la ventana (arriba a la izquierda)
-        ImageIcon iconoVentana = new ImageIcon(getClass().getResource("/Icon.png"));
-        setIconImage(iconoVentana.getImage());
+        // Fondo
+        PanelConFondo fondo = new PanelConFondo();
+        fondo.setLayout(new BorderLayout());
+        setContentPane(fondo);
 
-        // 🌟 Imagen decorativa
-        JLabel imagenLabel = new JLabel(new ImageIcon(getClass().getResource("/Icon.png")));
-        imagenLabel.setHorizontalAlignment(JLabel.CENTER);
+        // Panel central transparente con botones
+        JPanel panelCentral = new JPanel();
+        panelCentral.setOpaque(false);
+        panelCentral.setLayout(new BoxLayout(panelCentral, BoxLayout.Y_AXIS));
+        panelCentral.setBorder(BorderFactory.createEmptyBorder(80, 150, 80, 150));
 
-        // 🌟 Panel para los botones
-        JPanel panelBotones = new JPanel();
-        panelBotones.setLayout(new GridLayout(2, 1, 15, 15));
-        panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 50, 30, 50));  // Margen
+        // Botones estilizados
+        JButton btnIniciar = crearBoton("Iniciar Sesión", new Color(255, 183, 3));
+        JButton btnRegistro = crearBoton("Registrarse", new Color(255, 183, 3));
+        JButton btnSalir = crearBoton("Salir", new Color(0, 0, 0));
 
-        JButton botonIniciarSesion = new JButton("Iniciar Sesión");
-        JButton botonRegistrarse = new JButton("Registrarse");
+        btnSalir.addActionListener(e -> {
+            if (musicaClip != null && musicaClip.isRunning()) {
+                musicaClip.stop();
+                musicaClip.close(); // Solo al salir completamente
+            }
+            new VentanaPrincipal().setVisible(true);
+            dispose();
+        });
 
-        // 🌟 Estilo de los botones (redondeado visual)
-        Color colorBoton = new Color(10, 20, 105);
-        botonIniciarSesion.setBackground(colorBoton);
-        botonIniciarSesion.setForeground(Color.WHITE);
-        botonIniciarSesion.setFont(new Font("Arial", Font.BOLD, 16));
-        botonIniciarSesion.setFocusPainted(false);
 
-        botonRegistrarse.setBackground(colorBoton);
-        botonRegistrarse.setForeground(Color.WHITE);
-        botonRegistrarse.setFont(new Font("Arial", Font.BOLD, 16));
-        botonRegistrarse.setFocusPainted(false);
 
-        // Acciones
-        botonIniciarSesion.addActionListener(e -> new VentanaLogin());
-        botonRegistrarse.addActionListener(e -> new VentanaRegistro());
+        // Separación entre botones
+        panelCentral.add(btnIniciar);
+        panelCentral.add(Box.createVerticalStrut(20));
+        panelCentral.add(btnRegistro);
+        panelCentral.add(Box.createVerticalStrut(20));
+        panelCentral.add(btnSalir);
 
-        panelBotones.add(botonIniciarSesion);
-        panelBotones.add(botonRegistrarse);
-
-        // 🌟 Agregar todo a la ventana
-        add(imagenLabel, BorderLayout.NORTH);
-        add(panelBotones, BorderLayout.CENTER);
-
+        fondo.add(panelCentral, BorderLayout.CENTER);
         setVisible(true);
     }
-}
 
+    private JButton crearBoton(String texto, Color colorFondo) {
+        JButton boton = new JButton(texto);
+        boton.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        boton.setBackground(colorFondo);
+        boton.setForeground(Color.WHITE);
+        boton.setFocusPainted(false);
+        boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        boton.setPreferredSize(new Dimension(200, 40));
+        boton.setMaximumSize(new Dimension(200, 40));
+        boton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        return boton;
+    }
+
+    class PanelConFondo extends JPanel {
+        private Image fondo;
+
+        public PanelConFondo() {
+            try {
+                fondo = new ImageIcon(getClass().getResource("/d4ebdf21-64e9-494a-a417-e8079fc29b0e.png")).getImage();
+            } catch (Exception e) {
+                System.out.println("No se pudo cargar el fondo.");
+            }
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (fondo != null) {
+                g.drawImage(fondo, 0, 0, getWidth(), getHeight(), this);
+            }
+        }
+    }
+}
