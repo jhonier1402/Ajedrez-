@@ -5,4 +5,3 @@ public class AjedrezApp {
         SwingUtilities.invokeLater(() -> new VentanaPrincipal());
     }
 }
-/

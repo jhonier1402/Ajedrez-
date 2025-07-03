@@ -9,6 +9,10 @@ public class VentanaPrincipal extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
+        // Establecer icono
+        ImageIcon icono = new ImageIcon(getClass().getResource("/icon.png"));
+        setIconImage(icono.getImage());
+
         JLabel titulo = new JLabel("Ajedrez", SwingConstants.CENTER);
         titulo.setFont(new Font("Serif", Font.BOLD, 40));
         add(titulo, BorderLayout.NORTH);

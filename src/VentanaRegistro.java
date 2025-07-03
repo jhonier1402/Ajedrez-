@@ -14,6 +14,10 @@ public class VentanaRegistro extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new GridLayout(3, 2, 10, 10));
 
+
+        ImageIcon icono = new ImageIcon(getClass().getResource("/icon.png"));
+        setIconImage(icono.getImage());
+
         // Nombre de usuario
         add(new JLabel("Nombre de Usuario:"));
         campoUsuario = new JTextField();
